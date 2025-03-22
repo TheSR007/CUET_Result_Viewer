@@ -27,24 +27,16 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   }
 
   try {
-    const loginResponse = await fetch('/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ studentId, password }),
-    });
-
-    if (loginResponse.status === 401) {
-      alert('Invalid Student ID or Password. Please try again.');
-      return;
-    }
-
-    const { phpSessionId } = await loginResponse.json();
-
     const resultResponse = await fetch('/result', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phpSessionId }),
+      body: JSON.stringify({ studentId, password })
     });
+
+    if (resultResponse.status === 401) {
+        alert('Invalid Student ID or Password. Please try again.');
+        return;
+    }
 
     if (resultResponse.status === 404) {
       alert('No result published yet.');
