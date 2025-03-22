@@ -1,0 +1,4 @@
+.wrangler
+node_modules
+_worker.js
+wrangler.toml
