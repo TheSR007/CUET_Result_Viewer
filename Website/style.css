@@ -94,7 +94,7 @@ button:hover {
   display: none;
   overflow-y: auto;
   max-height: 90vh;
-  width: 100%;
+  width: 96%;
   overflow: auto;
   scrollbar-width: none;
 }
