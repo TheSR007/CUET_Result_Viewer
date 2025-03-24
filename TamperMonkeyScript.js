@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CUET Result Viewer
 // @namespace    TheSR
-// @version      1.0
+// @version      1.1
 // @description  Calculates CGPA from the CUET result page with additional features like Target CGPA Calculator and What-If Grade Simulator
 // @author       TheSR
 // @match        *://course.cuet.ac.bd/result_published.php
@@ -207,11 +207,11 @@
         resultDiv.style.overflowY = "auto";
         resultDiv.style.maxHeight = "90vh";
 
-        // Generate HTML for term-wise CGPA
+        // Generate HTML for term-wise Result
         let termwiseHTML = `
       <div style="margin-bottom: 20px;">
         <h3 style="margin: 0 0 15px 0; color: #007bff; font-size: 18px; font-weight: 600;">
-          Term-wise CGPA
+          Term-wise Result
         </h3>
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
     `;
@@ -226,12 +226,58 @@
                     ).toFixed(2);
                     const level = termKey[0];
                     const term = termKey[1];
-                    termwiseHTML += `
-            <div style="background-color: var(--bg-color); padding: 10px; border-radius: 6px; border: 1px solid #e9ecef;">
-              <div style="color: #6c757d; font-size: 12px;">Level ${level} Term ${term}</div>
-              <div style="font-size: 16px; font-weight: 600; color: var(--text-color);">${termCGPA}</div>
+
+                    // Filter rows for the current term
+                    const termRows = Array.from(rows).filter(row => {
+                        const cells = row.getElementsByTagName("td");
+                        if (cells.length >= 5) {
+                            const levelTerm = cells[2].textContent.trim();
+                            return (
+                                levelTerm === `Level ${level} - Term ${term}`
+                            );
+                        }
+                        return false;
+                    });
+
+                    // Generate subject details for the term
+                    let subjectDetailsHTML = "";
+                    termRows.forEach(row => {
+                        const cells = row.getElementsByTagName("td");
+                        const subjectCode = cells[0].textContent.trim();
+                        const credits = cells[1].textContent.trim();
+                        const grade = cells[4].textContent.trim();
+                        const isLab = cells[3].textContent.trim() === "Yes";
+
+                        subjectDetailsHTML += `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--text-color);">
+              <div style="flex: 3;">
+                <div style="font-weight: 500;">${subjectCode}</div>
+                <div style="font-size: 12px; color: #6c757d;">${
+                    isLab ? "Sessional" : "Theory"
+                }</div>
+              </div>
+              <div style="flex: 1; text-align: right;">
+                <div style="font-size: 12px; color: var(--text-color);">${credits} Credits</div>
+                <div style="font-size: 14px; font-weight: 600; color: ${
+                    grade === "F" ? "#dc3545" : "#28a745"
+                };">${grade}</div>
+              </div>
             </div>
           `;
+                    });
+
+                    // Add term-wise result with subject details
+                    termwiseHTML += `
+          <div style="background-color: var(--bg-color); padding: 10px; border-radius: 6px; border: 1px solid var(--text-color); margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <div style="color: #6c757d; font-size: 12px;">Level ${level} Term ${term}</div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--text-color);">CGPA: ${termCGPA}</div>
+            </div>
+            <div style="margin-top: 10px;">
+              ${subjectDetailsHTML}
+            </div>
+          </div>
+        `;
                 }
             });
 
