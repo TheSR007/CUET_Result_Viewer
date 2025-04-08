@@ -161,7 +161,7 @@ function calculateCGPA(container) {
   const resultDiv = document.getElementById('result');
   resultDiv.style.display = 'block';
 
-  // Generate HTML for term-wise Result
+  // Generate HTML for term-wise CGPA
   let termwiseHTML = `
       <div style="margin-bottom: 20px;">
           <h3 style="margin: 0 0 15px 0; color: #007bff; font-size: 18px; font-weight: 600;">
