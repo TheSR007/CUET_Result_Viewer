@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CUET Result Viewer",
-  "version": "1.1",
+  "version": "1.2",
   "description": "Calculates CGPA from the CUET result page with additional features like Target CGPA Calculator and What-If Grade Simulator",
   "permissions": ["activeTab"],
   "action": {

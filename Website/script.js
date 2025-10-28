@@ -84,7 +84,7 @@ function calculateCGPA(container) {
   // First pass: collect latest grades and count subjects
   rows.forEach(row => {
       const cells = row.getElementsByTagName('td');
-      if (cells.length >= 5) {
+      if (cells.length >= 6) {
           const subjectCode = cells[0].textContent.trim();
           const credits = parseFloat(cells[1].textContent);
           const levelTerm = cells[2].textContent.trim();
@@ -107,7 +107,7 @@ function calculateCGPA(container) {
           // Only add to failedSubjectsMap if the latest grade is F
           rows.forEach(row => {
               const cells = row.getElementsByTagName('td');
-              if (cells.length >= 5 && cells[0].textContent.trim() === subject && cells[4].textContent.trim() === 'F') {
+              if (cells.length >= 6 && cells[0].textContent.trim() === subject && cells[4].textContent.trim() === 'F') {
                   failedSubjectsMap.set(subject, {
                       code: subject,
                       credits: parseFloat(cells[1].textContent),
@@ -121,7 +121,7 @@ function calculateCGPA(container) {
   // Second pass: calculate CGPA using latest grades (excluding F grades)
   rows.forEach(row => {
       const cells = row.getElementsByTagName('td');
-      if (cells.length >= 5) {
+      if (cells.length >= 6) {
           const subjectCode = cells[0].textContent.trim();
           const credits = parseFloat(cells[1].textContent);
           const levelTerm = cells[2].textContent.trim();
@@ -129,7 +129,8 @@ function calculateCGPA(container) {
           
           // Only process if this is the latest grade for the subject and it's not an F grade
           if (currentGrade === subjectGrades[subjectCode] && currentGrade !== 'F') {
-              const matches = levelTerm.match(/Level (\d+) - Term (\d+)/);
+              const matches = levelTerm.match(/Level (\d+) - Term ([IVX]+)/);
+              if (!matches) return;
               if (matches && !isNaN(credits) && currentGrade in gradePoints) {
                   const level = matches[1];
                   const term = matches[2];
@@ -179,7 +180,7 @@ function calculateCGPA(container) {
       // Filter rows for the current term
       const termRows = Array.from(rows).filter(row => {
         const cells = row.getElementsByTagName('td');
-        if (cells.length >= 5) {
+        if (cells.length >= 6) {
           const levelTerm = cells[2].textContent.trim();
           return levelTerm === `Level ${level} - Term ${term}`;
         }
@@ -416,7 +417,7 @@ function calculateExtendedStats(rows, subjectGrades) {
   // Process each subject's final grade
   rows.forEach(row => {
       const cells = row.getElementsByTagName('td');
-      if (cells.length >= 5) {
+      if (cells.length >= 6) {
           const subjectCode = cells[0].textContent.trim();
           const isLab = cells[3].textContent.trim() === 'Yes';
           const currentGrade = cells[4].textContent.trim();
@@ -574,7 +575,7 @@ function addWhatIfSimulator(resultDiv, rows, subjectGrades, currentCGPA, totalCr
       // Process each row
       rows.forEach(row => {
           const cells = row.getElementsByTagName('td');
-          if (cells.length >= 5) {
+          if (cells.length >= 6) {
               const subjectCode = cells[0].textContent.trim();
               const credits = parseFloat(cells[1].textContent);
               const currentGrade = cells[4].textContent.trim();

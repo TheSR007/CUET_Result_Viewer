@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CUET Result Viewer
 // @namespace    TheSR
-// @version      1.1
+// @version      1.2
 // @description  Calculates CGPA from the CUET result page with additional features like Target CGPA Calculator and What-If Grade Simulator
 // @author       TheSR
 // @match        *://course.cuet.ac.bd/result_published.php
@@ -106,7 +106,7 @@
         // First pass: collect latest grades and count subjects
         rows.forEach(row => {
             const cells = row.getElementsByTagName("td");
-            if (cells.length >= 5) {
+            if (cells.length >= 6) {
                 const subjectCode = cells[0].textContent.trim();
                 const credits = parseFloat(cells[1].textContent);
                 const levelTerm = cells[2].textContent.trim();
@@ -128,7 +128,7 @@
                 rows.forEach(row => {
                     const cells = row.getElementsByTagName("td");
                     if (
-                        cells.length >= 5 &&
+                        cells.length >= 6 &&
                         cells[0].textContent.trim() === subject &&
                         cells[4].textContent.trim() === "F"
                     ) {
@@ -145,7 +145,7 @@
         // Second pass: calculate CGPA using latest grades (excluding F grades)
         rows.forEach(row => {
             const cells = row.getElementsByTagName("td");
-            if (cells.length >= 5) {
+            if (cells.length >= 6) {
                 const subjectCode = cells[0].textContent.trim();
                 const credits = parseFloat(cells[1].textContent);
                 const levelTerm = cells[2].textContent.trim();
@@ -155,7 +155,8 @@
                     currentGrade === subjectGrades[subjectCode] &&
                     currentGrade !== "F"
                 ) {
-                    const matches = levelTerm.match(/Level (\d+) - Term (\d+)/);
+                    const matches = levelTerm.match(/Level (\d+) - Term ([IVX]+)/);
+                    if (!matches) return;
                     if (
                         matches &&
                         !isNaN(credits) &&
@@ -189,7 +190,7 @@
 
         // Create result display with enhanced styling
         const resultDiv = document.getElementById("cuet-result-viewer");
-        resultDiv.style.padding = "25px";
+        resultDiv.style.padding = "15px";
         resultDiv.style.backgroundColor = "var(--result-bg)";
         resultDiv.style.position = "fixed";
         resultDiv.style.top = "20px";
@@ -198,8 +199,7 @@
         resultDiv.style.border = "1px solid var(--result-border)";
         resultDiv.style.borderRadius = "10px";
         resultDiv.style.boxShadow = "0 4px 15px rgba(0,0,0,0.15)";
-        resultDiv.style.maxWidth = "400px";
-        resultDiv.style.minWidth = "350px";
+        resultDiv.style.minWidth = "400px";
         resultDiv.style.fontFamily = '"Segoe UI", Arial, sans-serif';
         resultDiv.style.fontSize = "14px";
         resultDiv.style.lineHeight = "1.6";
@@ -230,7 +230,7 @@
                     // Filter rows for the current term
                     const termRows = Array.from(rows).filter(row => {
                         const cells = row.getElementsByTagName("td");
-                        if (cells.length >= 5) {
+                        if (cells.length >= 6) {
                             const levelTerm = cells[2].textContent.trim();
                             return (
                                 levelTerm === `Level ${level} - Term ${term}`
@@ -565,7 +565,7 @@
 
             rows.forEach(row => {
                 const cells = row.getElementsByTagName("td");
-                if (cells.length >= 5) {
+                if (cells.length >= 6) {
                     const subjectCode = cells[0].textContent.trim();
                     const credits = parseFloat(cells[1].textContent);
                     const currentGrade = cells[4].textContent.trim();
@@ -722,7 +722,7 @@
 
         rows.forEach(row => {
             const cells = row.getElementsByTagName("td");
-            if (cells.length >= 5) {
+            if (cells.length >= 6) {
                 const subjectCode = cells[0].textContent.trim();
                 const isLab = cells[3].textContent.trim() === "Yes";
                 const currentGrade = cells[4].textContent.trim();
