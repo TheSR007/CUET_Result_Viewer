@@ -172,57 +172,58 @@ function calculateCGPA(container) {
   `;
 
   Object.keys(termWiseCredit).sort().forEach(termKey => {
-    if (termWiseCredit[termKey] > 0) {
-      const termCGPA = (termWiseCreditAndGrade[termKey] / termWiseCredit[termKey]).toFixed(2);
-      const level = termKey[0];
-      const term = termKey[1];
-  
-      // Filter rows for the current term
-      const termRows = Array.from(rows).filter(row => {
-        const cells = row.getElementsByTagName('td');
-        if (cells.length >= 6) {
-          const levelTerm = cells[2].textContent.trim();
-          return levelTerm === `Level ${level} - Term ${term}`;
-        }
-        return false;
-      });
-  
-      // Generate subject details for the term
-      let subjectDetailsHTML = '';
-      termRows.forEach(row => {
-        const cells = row.getElementsByTagName('td');
-        const subjectCode = cells[0].textContent.trim();
-        const credits = cells[1].textContent.trim();
-        const grade = cells[4].textContent.trim();
-        const isLab = cells[3].textContent.trim() === 'Yes';
-  
-        subjectDetailsHTML += `
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--text-color);">
-            <div style="flex: 3;">
-              <div style="font-weight: 500;">${subjectCode}</div>
-              <div style="font-size: 12px; color: #6c757d;">${isLab ? 'Sessional' : 'Theory'}</div>
-            </div>
-            <div style="flex: 1; text-align: right;">
-              <div style="font-size: 14px; color: var(--text-color);">${credits} Credits</div>
-              <div style="font-size: 14px; font-weight: 600; color: ${grade === 'F' ? '#dc3545' : '#28a745'};">${grade}</div>
-            </div>
-          </div>
-        `;
-      });
-  
-      // Add term-wise result with subject details
-      termwiseHTML += `
-        <div style="background-color: var(--bg-color); padding: 10px; border-radius: 6px; border: 1px solid var(--text-color); margin-bottom: 20px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <div style="color: #6c757d; font-size: 12px;">Level ${level} Term ${term}</div>
-            <div style="font-size: 16px; font-weight: 600; color: var(--text-color);">CGPA: ${termCGPA}</div>
-          </div>
-          <div style="margin-top: 10px;">
-            ${subjectDetailsHTML}
-          </div>
-        </div>
-      `;
-    }
+      if (termWiseCredit[termKey] > 0) {
+          const termCGPA = (termWiseCreditAndGrade[termKey] / termWiseCredit[termKey]).toFixed(2);
+          
+          const level = termKey[0];
+          const term = termKey.substring(1);
+          
+          // Filter rows for the current term
+          const termRows = Array.from(rows).filter(row => {
+              const cells = row.getElementsByTagName('td');
+              if (cells.length >= 6) {
+                  const levelTerm = cells[2].textContent.trim();
+                  return levelTerm === `Level ${level} - Term ${term}`;
+              }
+              return false;
+          });
+
+          // Generate subject details for the term
+          let subjectDetailsHTML = '';
+          termRows.forEach(row => {
+              const cells = row.getElementsByTagName('td');
+              const subjectCode = cells[0].textContent.trim();
+              const credits = cells[1].textContent.trim();
+              const grade = cells[4].textContent.trim();
+              const isLab = cells[3].textContent.trim() === 'Yes';
+
+              subjectDetailsHTML += `
+                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--text-color);">
+                      <div style="flex: 3;">
+                          <div style="font-weight: 500;">${subjectCode}</div>
+                          <div style="font-size: 12px; color: #6c757d;">${isLab ? 'Sessional' : 'Theory'}</div>
+                      </div>
+                      <div style="flex: 1; text-align: right;">
+                          <div style="font-size: 14px; color: var(--text-color);">${credits} Credits</div>
+                          <div style="font-size: 14px; font-weight: 600; color: ${grade === 'F' ? '#dc3545' : '#28a745'};">${grade}</div>
+                      </div>
+                  </div>
+              `;
+          });
+
+          // Add term-wise result with subject details
+          termwiseHTML += `
+              <div style="background-color: var(--bg-color); padding: 10px; border-radius: 6px; border: 1px solid var(--text-color); margin-bottom: 20px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                      <div style="color: #6c757d; font-size: 12px;">Level ${level} Term ${term}</div>
+                      <div style="font-size: 16px; font-weight: 600; color: var(--text-color);">CGPA: ${termCGPA}</div>
+                  </div>
+                  <div style="margin-top: 10px;">
+                      ${subjectDetailsHTML}
+                  </div>
+              </div>
+          `;
+      }
   });
 
   termwiseHTML += '</div></div>';

@@ -20,83 +20,168 @@
   --result-border: #444444;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
   margin: 0;
-  padding: 0;
+  padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
   background-color: var(--bg-color);
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid var(--text-color);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid var(--input-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 360px;
   text-align: center;
 }
 
-h1 {
-  margin-bottom: 20px;
-  font-size: 24px;
+.logo-section {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.logo-section img {
+  display: block;
+  margin: 0 auto 12px auto;
+  width: 70px;
+  height: auto;
+  max-width: 100%;
+}
+
+.logo-section h1 {
+  margin: 0;
+  font-size: clamp(20px, 5vw, 26px);
   color: var(--text-color);
+  line-height: 1.2;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 18px;
   text-align: left;
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--text-color);
 }
 
 #loginForm input {
-  width: 94%;
-  padding: 8px;
+  width: 100%;
+  padding: 12px;
   border: 1px solid var(--input-border);
-  border-radius: 4px;
-  font-size: 14px;
+  border-radius: 6px;
+  font-size: 16px;
   background-color: var(--input-bg);
   color: var(--text-color);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#loginForm input:focus {
+  outline: none;
+  border-color: var(--button-bg);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
 button {
   width: 100%;
-  padding: 10px;
+  padding: 14px;
   background-color: var(--button-bg);
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
 }
 
 button:hover {
   background-color: var(--button-hover-bg);
 }
 
+button:active {
+  transform: scale(0.98);
+}
+
 .result-container {
-  padding: 15px;
+  padding: 20px;
   position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   border: 1px solid var(--result-border);
-  border-radius: 4px;
+  border-radius: 12px;
   background-color: var(--result-bg);
   display: none;
   overflow-y: auto;
   max-height: 90vh;
   width: 96%;
-  overflow: auto;
-  scrollbar-width: none;
+  max-width: 800px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 15px;
+    align-items: flex-start;
+    padding-top: 10vh;
+  }
+  
+  .container {
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .logo-section img {
+    width: 60px;
+  }
+  
+  .logo-section h1 {
+    font-size: 22px;
+  }
+  
+  #loginForm input {
+    padding: 14px;
+    font-size: 16px;
+  }
+  
+  button {
+    padding: 16px;
+  }
+  
+  .result-container {
+    width: 95%;
+    max-height: 80vh;
+    padding: 15px;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 320px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .logo-section h1 {
+    font-size: 20px;
+  }
 }
 
 ::-webkit-scrollbar {
